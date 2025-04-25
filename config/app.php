@@ -124,4 +124,6 @@ return [
     ],
 
     'api_version' => env('API_VERSION', 'v1'),
+
+    'frontend_url' => env('FRONTEND_URL', 'https://default-frontend.com'),
 ];

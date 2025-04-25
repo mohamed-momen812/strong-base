@@ -1,11 +1,25 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\Auth\EmailVerificationController;
+use App\Http\Controllers\Api\V1\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\V1\Auth\LoginController;
+use App\Http\Controllers\Api\V1\Auth\RegisterController;
+use App\Http\Controllers\Api\V1\Auth\ProfileController;
+use App\Http\Controllers\Api\V1\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::prefix('v1')->group(function () {
+    Route::prefix('auth')->group(function () {
+        Route::post('register', RegisterController::class);
+        Route::post('login', LoginController::class);
+        Route::post('forgot-password', ForgotPasswordController::class); // ask frontend team to use this route
+        Route::post('reset-password', ResetPasswordController::class);
 
-
-// don't forget to delete routeserviceprovider.php and add the routes to the app in boatstrap/app.php
+        Route::middleware('auth:api')->group(function () {
+            Route::get('me', [ProfileController::class, 'show']);
+            Route::post('logout', [ProfileController::class, 'logout']);
+            Route::post('email/verification-notification', [EmailVerificationController::class, 'sendVerificationEmail']);
+            Route::get('verify-email',[EmailVerificationController::class, 'verify']);
+        });
+    });
+});

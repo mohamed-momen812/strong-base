@@ -1,11 +1,9 @@
 <?php
 
-use App\Http\Middleware\Api\TransformResponse;
-use App\Http\Middleware\Api\VersionHeader;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -14,47 +12,26 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::prefix('api/v1')
-            ->middleware(['api', 'api.version:v1'])
-            ->namespace($this->namespace)
-            ->group(base_path('routes/api_v1.php'));
-
-            Route::prefix('api/v2')
-                ->middleware(['api', 'api.version:v2'])
-                ->namespace($this->namespace)
-                ->group(base_path('routes/api_v2.php'));
-
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'));
-
-            Route::prefix('admin')
-                ->middleware(['web', 'auth', 'admin'])
-                ->namespace($this->namespace.'\Admin')
-                ->group(base_path('routes/admin.php'));
-
-            Route::middleware('web')
-                ->namespace($this->namespace.'\Auth')
-                ->group(base_path('routes/auth.php'));
+            Route::middleware('api')
+                ->name('admin.')
+                ->group(base_path('routes/admin_api.php'));
         },
     )
     ->withMiddleware(function (Middleware $middleware) {
-       
+
         $middleware->web(append: [
-            //
+            // Add your custom middleware here
         ]);
-     
+
         $middleware->api(prepend: [
-            TransformResponse::class,
-            VersionHeader::class
+            // Add your custom middleware here
         ]);
 
         $middleware->alias([
-            'api.transform' => TransformResponse::class,
-            'api.version' => VersionHeader::class,
+            // Add your custom middleware here
         ]);
-        
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Add your custom exception handling here
     })->create();

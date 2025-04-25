@@ -4,38 +4,10 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
-    protected $model;
-    protected $withTrashed = false;
-
-    public function __construct(User $model)
-    {
-        $this->model = $model;
-    }
-
-    public function findById(int $id): ?User
-    {
-        $query = $this->model->newQuery();
-        
-        if ($this->withTrashed) {
-            $query->withTrashed();
-        }
-
-        return $query->find($id);
-    }
-
-    public function findByEmail(string $email): ?User
-    {
-        return $this->model->where('email', $email)->first();
-    }
-
-    public function getAllPaginated(int $perPage = 15): LengthAwarePaginator
-    {
-        return $this->model->paginate($perPage);
-    }
+    public function __construct(private User $model) {}
 
     public function create(array $data): User
     {
@@ -48,22 +20,8 @@ class UserRepository implements UserRepositoryInterface
         return $user->fresh();
     }
 
-    public function delete(User $user): bool
+    public function findByEmail(string $email): ?User
     {
-        return $user->delete();
-    }
-
-    public function withTrashed(): self
-    {
-        $this->withTrashed = true;
-        return $this;
-    }
-
-    public function search(string $query, int $perPage = 15): LengthAwarePaginator
-    {
-        return $this->model
-            ->where('name', 'like', "%{$query}%")
-            ->orWhere('email', 'like', "%{$query}%")
-            ->paginate($perPage);
+        return $this->model->where('email', $email)->first();
     }
 }

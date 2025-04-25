@@ -2,36 +2,35 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\HasUuid;
-use App\Models\Scopes\ActiveScope;
-use Illuminate\Notifications\Notifiable;
+use App\Notifications\CustomResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use Notifiable, HasUuid;
-
-    protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new ActiveScope);
-    }
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'password', 'is_active'
+        'name',
+        'email',
+        'password',
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_active' => 'boolean',
     ];
 
-    public function scopeAdmin($query)
+    // Password::sendResetLink() method internally uses the sendPasswordResetNotification()
+    public function sendPasswordResetNotification($token)
     {
-        return $query->where('is_admin', true);
+        $this->notify(new CustomResetPassword($token));
     }
 }
