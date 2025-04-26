@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions\Admin;
+namespace App\Actions\Admin\Users;
 
 use App\Data\Admin\UserData;
 use App\Models\User;

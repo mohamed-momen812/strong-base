@@ -2,7 +2,6 @@
 
 namespace App\Services\Auth;
 
-use App\Actions\Auth\LoginAction;
 use App\Data\Auth\LoginData;
 use App\Models\Admin;
 use App\Repositories\Contracts\AdminRepositoryInterface;
@@ -12,9 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class AdminAuthService implements AdminAuthServiceInterface
 {
-    public function __construct(
-        private AdminRepositoryInterface $adminRepository
-    ) {}
+    public function __construct( private AdminRepositoryInterface $adminRepository) {}
 
     public function login(LoginData $data): array
     {

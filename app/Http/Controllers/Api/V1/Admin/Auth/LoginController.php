@@ -13,7 +13,7 @@ class LoginController extends Controller
 
     public function __invoke(LoginRequest $request)
     {
-        $data = LoginData::from($request->validated());
+        $data = LoginData::from($request->validated()); // we use the same login data class as the one used in the AuthController no need to create a new one
         $result = $this->authService->login($data);
 
         return response()->json([

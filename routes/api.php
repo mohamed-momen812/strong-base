@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
+
+        // all of these is single action controller, so in controller we use action directly without using service
         Route::post('register', RegisterController::class);
         Route::post('login', LoginController::class);
         Route::post('forgot-password', ForgotPasswordController::class); // ask frontend team to use this route

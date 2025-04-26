@@ -4,7 +4,6 @@ namespace App\Actions\Auth;
 
 use App\Data\Auth\LoginData;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 

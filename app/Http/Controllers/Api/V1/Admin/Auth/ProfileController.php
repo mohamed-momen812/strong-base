@@ -11,7 +11,7 @@ class ProfileController extends Controller
 {
     public function __construct(private AdminAuthServiceInterface $authService) {}
 
-    public function show(Request $request)
+    public function show()
     {
         $admin = $this->authService->getUser();
 
